@@ -43,6 +43,7 @@ def homepage():
 @app.route("/api/v1.0/precipitation")
 def precipitation():
 #     Convert the query results to a Dictionary using date as the key and prcp as the value.
+    session = Session(engine)
     key = measurement.date
     value = measurement.prcp
     results = session.query(key, value).all()
@@ -60,7 +61,7 @@ def precipitation():
 def stations():
 #     Return a JSON list of stations from the dataset.
 
-
+    session = Session(engine)
     results = session.query(station.name).all()
 
     json_list = list(np.ravel(results))
@@ -74,6 +75,7 @@ def tobs():
     year_ago = dt.date(2017,8,23) - dt.timedelta(days=365)
     year_ago = str(year_ago)
 
+    session = Session(engine)
     results = session.query(measurement.date,measurement.tobs)\
         .filter(measurement.date <= '2017-08-23')\
         .filter(measurement.date >= year_ago).all()
@@ -104,6 +106,7 @@ def calc_temp(start):
 #     Returns:
 #         TMIN, TAVE, and TMAX
 #     """
+    session = Session(engine)
     results = session.query(*temps)\
                 .filter(measurement.date >= start)\
                 .all()
@@ -136,6 +139,7 @@ def calc_temps(start, end):
 #     Returns:
 #         TMIN, TAVE, and TMAX
 #     """
+    session = Session(engine)
     results = session.query(*temps)\
                     .filter(measurement.date >= start)\
                     .filter(measurement.date <= end)\
